@@ -1,17 +1,19 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-
+#include <header/model.h>
 #include <header/shader.h>
 #include <header/camera.h>
+#include <header/constant.h>
 
+#include "component/Triangle.cpp"
+#include "component/cube.cpp"
 #include <iostream>
+
+#include <list>
+using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -45,8 +47,10 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
 int main()
 {
+    //list<Shape> shapes;
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -87,61 +91,30 @@ int main()
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
-    
+
     unsigned int diffuseMap = loadTexture("./src/img/container001-red-small.png");
     unsigned int diffuseMap1 = loadTexture("./src/img/grass.png");
-
+    
     // build and compile our shader zprogram
     // ------------------------------------
     Shader lightingShader("./src/shader/cube.vs", "./src/shader/cube.fs");
     Shader lightCubeShader("./src/shader/light.vs", "./src/shader/light.fs");
     Shader grassShader("./src/shader/light.vs", "./src/shader/light.fs");
-    //
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    // ------------------------------------------------------------------
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+    Shader shader("./src/shader/2D.vs", "./src/shader/2D.fs");
+    Shader shaderTri("./src/shader/2D.vs", "./src/shader/2D.fs");
+    Shader shaderCubeBasic("./src/shader/CubeBasic.vs", "./src/shader/CubeBasic.fs");
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+    //=========
+    Triangle *tri = new Triangle(&shaderTri,verticesTri,sizeof(vertices)/sizeof(vertices[0]),3);
+    Cube *cubeBasic = new Cube(&shaderCubeBasic,vertices,sizeof(vertices)/sizeof(vertices[0]),36);
 
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+    std::vector<Shape*> cubes;
+    cubes.push_back(cubeBasic);
+    cubes.push_back(cubeBasic);
+    cubes.push_back(cubeBasic);
 
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
-    };
     
     // first, configure the cube's VAO (and VBO)
     unsigned int VBO, cubeVAO;
@@ -161,9 +134,9 @@ int main()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
-    
-    
-    // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
+
+
+   //====================
     unsigned int lightCubeVAO;
     glGenVertexArrays(1, &lightCubeVAO);
     glBindVertexArray(lightCubeVAO);
@@ -174,9 +147,10 @@ int main()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    
     model = glm::translate(model, positionGrass);
     model = glm::scale(model, glm::vec3(50.0f, 1.0f, 50.0f)); //
-    
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -197,7 +171,16 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //========= light properties
         //
+        tri->Draw(0, glm::vec3(0.0));
         
+        glm::vec3 model_trans = glm::vec3(-1.0f, 1.0f, -5.0f);
+        for (int i = 0; i < cubes.size(); i++) {
+            cout<< "i:" << (i+1)/1.5 <<endl;
+            model_trans = glm::vec3(((i - 1)/0.6), 1.0f, -5.0f);
+            cubes.at(i)->Draw(diffuseMap,model_trans);
+        }
+        
+
         lightingShader.use();
         lightingShader.setVec3("light.direction", -0.2f, 1.0f, -0.3f);
         lightingShader.setVec3("viewPos", camera.Position);
@@ -208,24 +191,24 @@ int main()
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        
+
         lightingShader.setMat4("projection", projection);
         glm::mat4 viewCube = camera.GetViewMatrix();
         lightingShader.setMat4("view", viewCube);
-        
+
         modelCube = glm::translate(modelCube, glm::vec3(0.0));
         lightingShader.setMat4("model", modelCube);
-        
+
         // bind diffuse map
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseMap);
 
         // render the cube
         glBindVertexArray(cubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
         //========= light properties
 
-        
+
         // also draw the lamp object
         lightCubeShader.use();
         lightCubeShader.setMat4("projection", projection);
@@ -237,7 +220,8 @@ int main()
         glBindTexture(GL_TEXTURE_2D, diffuseMap1);
         glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 30, 6);
-        
+
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -264,7 +248,7 @@ void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    
+
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
         positionCharacter.x -= 0.1f;
         modelCube = glm::translate(modelTempCube,positionCharacter);
@@ -295,7 +279,7 @@ void Update(){
     //glm::vec3(,positionCharacter.y + 2.5f,positionCharacter.z + 5);
     camera.Front = glm::normalize(positionCharacter - camera.Position);
 
-    std::cout<< "Front" << camera.Front.x <<";"<< camera.Front.y<< ";" << camera.Front.z  << std::endl;
+    //std::cout<< "Front" << camera.Front.x <<";"<< camera.Front.y<< ";" << camera.Front.z  << std::endl;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -352,8 +336,7 @@ unsigned int loadTexture(char const * path)
             format = GL_RED;
         else if (nrComponents == 3)
             format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
+        else format = GL_RGBA;
 
         glBindTexture(GL_TEXTURE_2D, textureID);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);

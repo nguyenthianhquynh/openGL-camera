@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BF226953284FB06400DF4A5F /* libassimp.5.2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF226950284FB06400DF4A5F /* libassimp.5.2.0.dylib */; };
+		BF226954284FB06400DF4A5F /* libassimp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF226951284FB06400DF4A5F /* libassimp.dylib */; };
+		BF226955284FB06400DF4A5F /* libassimp.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF226952284FB06400DF4A5F /* libassimp.5.dylib */; };
 		BF6E96DF284377830097C891 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF6E96DE284377830097C891 /* main.cpp */; };
 		BF6E96EA2843781C0097C891 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF6E96E92843781C0097C891 /* IOKit.framework */; };
 		BF6E96EC284378240097C891 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF6E96EB284378240097C891 /* OpenGL.framework */; };
@@ -31,6 +34,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BF021139285505DE00D28A9E /* constant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = constant.h; path = external/include/header/constant.h; sourceTree = SOURCE_ROOT; };
+		BF226950284FB06400DF4A5F /* libassimp.5.2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libassimp.5.2.0.dylib; sourceTree = "<group>"; };
+		BF226951284FB06400DF4A5F /* libassimp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libassimp.dylib; sourceTree = "<group>"; };
+		BF226952284FB06400DF4A5F /* libassimp.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libassimp.5.dylib; sourceTree = "<group>"; };
 		BF6E96DB284377830097C891 /* materialCube */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = materialCube; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF6E96DE284377830097C891 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		BF6E96E92843781C0097C891 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -48,6 +55,9 @@
 		BF6E96F8284379A70097C891 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libglfw3.a; sourceTree = "<group>"; };
 		BF6E96FA284379B70097C891 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
 		BF6E96FC28437A8E0097C891 /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
+		BFBB09BD284FB710002CC695 /* assimp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assimp; sourceTree = "<group>"; };
+		BFDEF1632852D1D200BBA790 /* component */ = {isa = PBXFileReference; lastKnownFileType = folder; path = component; sourceTree = "<group>"; };
+		BFDEF1642852D20500BBA790 /* cube.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = cube.h; path = external/include/component/cube.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +67,9 @@
 			files = (
 				BF6E96EA2843781C0097C891 /* IOKit.framework in Frameworks */,
 				BF6E96EC284378240097C891 /* OpenGL.framework in Frameworks */,
+				BF226955284FB06400DF4A5F /* libassimp.5.dylib in Frameworks */,
+				BF226953284FB06400DF4A5F /* libassimp.5.2.0.dylib in Frameworks */,
+				BF226954284FB06400DF4A5F /* libassimp.dylib in Frameworks */,
 				BF6E96EE2843782C0097C891 /* Cocoa.framework in Frameworks */,
 				BF6E96F9284379A70097C891 /* libglfw3.a in Frameworks */,
 			);
@@ -68,6 +81,7 @@
 		BF6E96D2284377830097C891 = {
 			isa = PBXGroup;
 			children = (
+				BFDEF1642852D20500BBA790 /* cube.h */,
 				BF6E96FA284379B70097C891 /* src */,
 				BF6E96E52843778F0097C891 /* external */,
 				BF6E96DD284377830097C891 /* materialCube */,
@@ -88,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				BF6E96DE284377830097C891 /* main.cpp */,
+				BF021139285505DE00D28A9E /* constant.h */,
 			);
 			path = materialCube;
 			sourceTree = "<group>";
@@ -105,6 +120,8 @@
 		BF6E96E6284377A20097C891 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				BFDEF1632852D1D200BBA790 /* component */,
+				BFBB09BD284FB710002CC695 /* assimp */,
 				BF6E96F5284379980097C891 /* GL */,
 				BF6E96F3284379980097C891 /* glad */,
 				BF6E96F7284379980097C891 /* GLFW */,
@@ -121,6 +138,9 @@
 		BF6E96E7284377AC0097C891 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				BF226950284FB06400DF4A5F /* libassimp.5.2.0.dylib */,
+				BF226952284FB06400DF4A5F /* libassimp.5.dylib */,
+				BF226951284FB06400DF4A5F /* libassimp.dylib */,
 				BF6E96F8284379A70097C891 /* libglfw3.a */,
 			);
 			path = lib;
@@ -315,7 +335,10 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/external/include";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/external/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/external/lib",
+					/opt/homebrew/Cellar/assimp/5.2.4/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -325,7 +348,10 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/external/include";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/external/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/external/lib",
+					/opt/homebrew/Cellar/assimp/5.2.4/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
